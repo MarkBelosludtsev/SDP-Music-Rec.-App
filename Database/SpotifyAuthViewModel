@@ -1,0 +1,19 @@
+package com.example.musicapp
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.adamratzman.spotify.auth.SpotifyDefaultCredentialStore
+import com.example.musicapp.SpotifyCredentialStoreHolder
+import java.util.*
+
+class SpotifyAuthViewModel (application: Application) : AndroidViewModel(application){
+    val clientId = "1d4202855df74f2bb71de00ebce8b6fa" //todo replace with build parameter
+    val redirectUri = "musicapp://spotify-rduri" //todo replace with build parameter
+    val pkceCodeVerifier = (0..96).joinToString("") {
+        (('a'..'z') + ('A'..'Z') + ('0'..'9')).random().toString();
+    }
+    val state = Random().nextLong().toString()
+
+    val credentialStore: SpotifyDefaultCredentialStore = SpotifyCredentialStoreHolder.getCredentialStoreInstance(application.applicationContext)
+
+}
