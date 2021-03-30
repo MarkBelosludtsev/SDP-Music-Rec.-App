@@ -1,0 +1,65 @@
+package com.example.musicapp;
+
+import java.util.Vector;
+
+public class Playlist {
+
+    private int id;
+    private String name;
+    private int songCount;
+    private Vector<Song> songs;
+
+    public Playlist(String n, int i, int sc, Vector<Song> s)
+    {
+        id = i;
+        name = n;
+        songCount = sc;
+        songs = s;
+    }
+
+    public Playlist(String n, int i, int sc)
+    {
+        id = i;
+        name = n;
+        songCount = sc;
+        songs = new Vector<Song>();
+    }
+
+    public Playlist()
+    {
+        id = 0;
+        name = "none";
+        songCount = 0;
+        songs = new Vector<Song>();
+    }
+
+    public int getID()
+    {
+        return id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void addSong(Song s)
+    {
+        songs.add(s);
+    }
+
+    public void deleteSong(Song s)
+    {
+        songs.remove(s);
+    }
+
+    public Vector<Song> getSongs()
+    {
+        return songs;
+    }
+
+    public String toString()
+    {
+        return ("null");
+    }
+}
