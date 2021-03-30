@@ -1,0 +1,126 @@
+package com.example.musicapp;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+
+@RequiresApi(api = Build.VERSION_CODES.N)
+public class MainActivity extends AppCompatActivity {
+
+    Button search, delete, viewAll, addSong;
+    EditText songEntry;
+    TextView appHeader, songInfo;
+    ListView songList;
+
+    SpotifyViewModel sViewModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        sViewModel = new ViewModelProvider(this).get(SpotifyViewModel.class);
+
+        search = findViewById(R.id.searchButton);
+        delete = findViewById(R.id.deleteButton);
+        viewAll = findViewById(R.id.viewAllButton);
+        appHeader = findViewById(R.id.mainSongListLabel);
+        songInfo = findViewById(R.id.songInfoLabel);
+        songEntry = findViewById(R.id.songNameTextBox);
+        songList = findViewById(R.id.mainDatabaseList);
+        addSong = findViewById(R.id.addButton);
+
+        Database songDatabase = new Database(MainActivity.this);
+        showSongsOnListView(songDatabase);
+
+        search.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Database songDatabase = new Database(MainActivity.this);
+                String name = songEntry.getText().toString();
+
+                Song result= songDatabase.findSong(name);
+
+                if (result.getTitle()=="none")
+                    Toast.makeText(MainActivity.this, "Song was not found", Toast.LENGTH_LONG).show();
+                else
+                {
+                    songInfo.setText(result.toString());
+                    Toast.makeText(MainActivity.this, "Song was found", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        viewAll.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Database songDatabase = new Database(MainActivity.this);
+                List<Song> allSongs = songDatabase.getAllSongs();
+
+                showSongsOnListView(songDatabase);
+
+                Toast.makeText(MainActivity.this, allSongs.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        addSong.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent i = new Intent(MainActivity.this, SecondaryActivity.class);
+                startActivity(i);
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                handleData();
+                /*Database songDatabase = new Database(MainActivity.this);
+                String name = songEntry.getText().toString();
+
+                Song result= songDatabase.findSong(name);
+
+                if (result.getTitle()=="none")
+                    Toast.makeText(MainActivity.this, "Song was not found", Toast.LENGTH_LONG).show();
+                else
+                {
+                    songDatabase.deleteSong(result);
+                    Toast.makeText(MainActivity.this, "Song deleted", Toast.LENGTH_LONG).show();
+                }
+                */
+            }
+        });
+    }
+
+    protected void handleData()
+    {
+        sViewModel.fetchSpotifyData();
+    }
+
+    private void showSongsOnListView(Database db)
+    {
+        ArrayAdapter songArrayAdapter = new ArrayAdapter<Song>(MainActivity.this, android.R.layout.simple_list_item_1, db.getAllSongs());
+        songList.setAdapter(songArrayAdapter);
+    }
+}
