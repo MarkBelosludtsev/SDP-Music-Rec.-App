@@ -1,0 +1,55 @@
+package com.example.musicapp;
+
+import android.graphics.Bitmap;
+
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "spotify_items")
+public class SpotifyEntity {
+
+    @NonNull
+    @PrimaryKey
+    private String uri;
+
+    private String title = "";
+
+    private String creator = "";
+
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    private Bitmap icon;
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Bitmap getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Bitmap icon) {
+        this.icon = icon;
+    }
+}
