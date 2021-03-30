@@ -1,0 +1,140 @@
+package com.example.musicapp;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Database extends SQLiteOpenHelper {
+
+    public static final String COLUMN_ID = "COLUMN_ID";
+    public static final String SONG_TABLE = "SONG_TABLE";
+    public static final String COLUMN_TITLE = "COLUMN_TITLE";
+    public static final String COLUMN_ARTIST = "COLUMN_ARTIST";
+    public static final String COLUMN_ALBUM = "COLUMN_ALBUM";
+    public static final String COLUMN_GENRE = "COLUMN_GENRE";
+    public static final String COLUMN_LENGTH = "COLUMN_LENGTH";
+    public static final String COLUMN_ARTWORK = "COLUMN_ARTWORK";
+
+    public Database(@Nullable Context context) {
+        super(context, "songs.db", null, 1);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        String createTableStatement = "CREATE TABLE " + SONG_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_TITLE + " TEXT, " + COLUMN_ARTIST + " TEXT, " + COLUMN_ALBUM + " TEXT, " + COLUMN_GENRE + " TEXT, " + COLUMN_LENGTH + " INT, " + COLUMN_ARTWORK + " TEXT)";
+
+        db.execSQL(createTableStatement);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    public boolean addSong(Song song)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_TITLE, song.getTitle());
+        cv.put(COLUMN_ARTIST, song.getArtist());
+        cv.put(COLUMN_ALBUM, song.getAlbum());
+        cv.put(COLUMN_GENRE, song.getGenre());
+        cv.put(COLUMN_LENGTH, song.getLength());
+        cv.put(COLUMN_ARTWORK, song.getArtwork());
+
+        long insert = db.insert(SONG_TABLE, null, cv);
+
+        if(insert == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean deleteSong(Song song)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String queryString = "DELETE FROM " + SONG_TABLE + " WHERE " + COLUMN_ID + " = " + song.getID();
+
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if(cursor.moveToFirst())
+            return true;
+        else
+            return false;
+    }
+
+    public Song findSong(String name)
+    {
+        String queryString = "SELECT * FROM " + SONG_TABLE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        Song searchResult;
+
+        if (cursor.moveToFirst()) {
+            do {
+                if (name.equals(cursor.getString(1))) {
+                    int ID = cursor.getInt(0);
+                    String title = cursor.getString(1);
+                    String artist = cursor.getString(2);
+                    String album = cursor.getString(3);
+                    String genre = cursor.getString(4);
+                    int length = cursor.getInt(5);
+                    String artwork = cursor.getString(6);
+
+                    searchResult = new Song(ID, title, artist, album, genre, length, artwork);
+
+                    return searchResult;
+                }
+            } while (cursor.moveToNext());
+        }
+
+        searchResult = new Song();
+
+        return searchResult;
+    }
+
+    public List<Song> getAllSongs()
+    {
+        List<Song> returnList = new ArrayList<>();
+
+        String queryString = "SELECT * FROM " + SONG_TABLE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst())
+        {
+            do{
+                int ID = cursor.getInt(0);
+                String title = cursor.getString(1);
+                String artist = cursor.getString(2);
+                String album = cursor.getString(3);
+                String genre = cursor.getString(4);
+                int length = cursor.getInt(5);
+                String artwork = cursor.getString(6);
+
+                Song newSong = new Song(ID, title, artist, album, genre, length, artwork);
+                returnList.add(newSong);
+
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return returnList;
+    }
+}
