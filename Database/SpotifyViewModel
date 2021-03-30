@@ -1,0 +1,75 @@
+package com.example.musicapp;
+
+import android.app.Application;
+import android.util.Log;
+
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
+
+import com.adamratzman.spotify.SpotifyClientApi;
+import com.adamratzman.spotify.javainterop.SpotifyContinuation;
+import com.adamratzman.spotify.models.Artist;
+import com.adamratzman.spotify.models.Album;
+import com.adamratzman.spotify.models.PagingObject;
+import com.adamratzman.spotify.models.Playlist;
+import com.adamratzman.spotify.models.Track;
+
+import org.jetbrains.annotations.NotNull;
+
+public class SpotifyViewModel extends AndroidViewModel {
+
+    private SpotifyClientApi mSpotifyClientApi;
+
+    private MutableLiveData<SpotifyEntity> spotifyEntity = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> askForConsent = new MutableLiveData<>();
+
+    public SpotifyViewModel(Application application) {
+        super(application);
+        initializeSpotifyApi();
+        spotifyEntity.setValue(new SpotifyEntity());
+        askForConsent.setValue(false);
+    }
+
+    private void initializeSpotifyApi() {
+        mSpotifyClientApi = SpotifyCredentialStoreHolder.getCredentialStoreInstance(getApplication().getApplicationContext()).getSpotifyClientPkceApi(null); //TODO reenabled when new version fixes refresh bug
+    }
+
+    public MutableLiveData<SpotifyEntity> getSpotifyEntity() {
+        return spotifyEntity;
+    }
+
+    public MutableLiveData<Boolean> getAskForConsent() {
+        return askForConsent;
+    }
+
+    public void fetchSpotifyData() {
+        mSpotifyClientApi.getAlbums().getAlbum("2dIGnmEIy1WZIcZCFSj6i8", null, new SpotifyContinuation<Album>() {
+            @Override
+            public void onSuccess(Album album) {
+                Log.d("Album ID", album.getId());
+                Log.d("Album Label", album.getLabel());
+                Log.d("Album Type", album.getType());
+                Log.d("Album URI", album.getUri().getUri());
+                Log.d("Album Ext URL", album.getExternalUrls().toString());
+            }
+
+            @Override
+            public void onFailure(@NotNull Throwable throwable) {
+                Log.e("fetchSpotifyData", "error fetching playlists", throwable);
+            }
+        });
+
+        mSpotifyClientApi.getSearch().searchAlbum("Plastic Beach", 1, null, null, new SpotifyContinuation<PagingObject>() {
+            @Override
+            public void onSuccess(PagingObject pgObj) {
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Throwable throwable) {
+                Log.e("fetchSpotifyData", "error fetching playlists", throwable);
+            }
+        });
+    }
+}
