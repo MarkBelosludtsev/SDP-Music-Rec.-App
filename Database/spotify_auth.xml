@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/auth_text"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Spotify must verify your account, give spotify authorization before continuing"
+        app:layout_constraintBottom_toTopOf="@id/auth_val"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/auth_val"
+        android:layout_width="154dp"
+        android:layout_height="wrap_content"
+        android:onClick="on_click_auth"
+        android:text="Authorize"
+        app:layout_constraintBottom_toTopOf="@id/auth_cont"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/auth_text" />
+
+    <Button
+        android:id="@+id/auth_cont"
+        android:layout_width="151dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:onClick="on_click_auth_cont"
+        android:text="Continue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/auth_val" />
+</LinearLayout>
