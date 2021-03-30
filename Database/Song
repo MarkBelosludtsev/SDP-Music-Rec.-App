@@ -1,0 +1,74 @@
+package com.example.musicapp;
+
+public class Song {
+
+    private int id;
+    private String title;
+    private String artist;
+    private String album;
+    private String genre;
+    private int length;
+    private String artwork; //placeholder
+
+    public Song(int i, String t, String ar, String al, String g, int l, String artw)
+    {
+        id = i;
+        title = t;
+        artist = ar;
+        album = al;
+        genre = g;
+        length = l;
+        artwork = artw;
+    }
+
+    public Song()
+    {
+        id = 0;
+        title = "none";
+        artist = "none";
+        album = "none";
+        genre = "none";
+        length = 0;
+        artwork = "none";
+    }
+
+    public int getID()
+    {
+        return id;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public String getArtist()
+    {
+        return artist;
+    }
+
+    public String getAlbum()
+    {
+        return album;
+    }
+
+    public String getGenre()
+    {
+        return genre;
+    }
+
+    public int getLength()
+    {
+        return length;
+    }
+
+    public String getArtwork()
+    {
+        return artwork;
+    }
+
+    public String toString()
+    {
+        return ("Title: " + title + " | Artist: " + artist + " | Album: " + album + " | Genre: " + genre + " | Length: " + length + " | Artwork: " + artwork);
+    }
+}
