@@ -16,7 +16,7 @@ app = Flask(__name__)
 #     data_created = db.Column(db.DateTime, default=datetime.utcnow)
 
 #     def __repr__(self): 
-#         return '<Task %r>' % self.id
+#         return '<Task %r>' % self.id 
 
 print('loading model...')
 model = gensim.models.Word2Vec.load('/home/sam/Desktop/web-server/AI/model/word2vec.model')
