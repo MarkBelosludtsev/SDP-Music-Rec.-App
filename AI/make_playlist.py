@@ -1,10 +1,14 @@
 import gensim
+import os
+import AI.logger
+
 
 def make_playlist(seed_tracks):
 
+    print('pathname mp: ', os.path.dirname(os.path.abspath(__name__)))
     if seed_tracks:
         # CURRENTLY NO MODEL
-        model = gensim.models.Word2Vec.load('word2vec.model')
+        model = gensim.models.Word2Vec.load('AI/model/word2vec.model')
         num_tracks = 100
         seed_window = num_tracks
         for i in range(0, num_tracks - len(seed_tracks)):
