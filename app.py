@@ -19,7 +19,7 @@ app = Flask(__name__)
 #         return '<Task %r>' % self.id 
 
 print('loading model...')
-model = gensim.models.Word2Vec.load('/home/sam/Desktop/web-server/AI/model/word2vec.model')
+model = gensim.models.Word2Vec.load('/home/pi/sp-webserver/AI/model/word2vec.model')
 print('model loaded.')
 
 @app.route('/', methods=['POST', 'GET'])
@@ -28,24 +28,30 @@ def index():
         return "POST"
     if request.method == 'GET':
         seed_tracks = [request.args.get('s1'), request.args.get('s2'), request.args.get('s3')]
+        print('returning playlist...')
         return jsonify(make_playlist(seed_tracks))
             # [{ "s1": request.args.get('s1'), "s2": request.args.get('s2'), "s3": request.args.get('s3') }])
 
 
 def make_playlist(seed_tracks):
 
-    if seed_tracks:
-        num_tracks = 100
-        seed_window = num_tracks
-        for i in range(0, num_tracks - len(seed_tracks)):
-            next_track = model.wv.most_similar(positive=seed_tracks[-seed_window:], topn=1)
-            if next_track == None:
-                break
-            seed_tracks.append(next_track[0][0])
-        return seed_tracks
+    try:
+        if seed_tracks:
+            num_tracks = 100
+            seed_window = num_tracks
+            for i in range(0, num_tracks - len(seed_tracks)):
+                next_track = model.wv.most_similar(positive=seed_tracks[-seed_window:], topn=1)
+                if next_track == None:
+                    break
+                seed_tracks.append(next_track[0][0])
+            return seed_tracks
     
-    else:
-        return None
+        else:
+            return None
+    except KeyError:
+        return 'Invalid song ID'
+    except TypeError:
+        print('TypeError has occured.')
 
 if __name__ == '__main__':
     app.run()
